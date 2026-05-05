@@ -1,0 +1,187 @@
+﻿<Window x:Class="SudokuUnlimited.Game"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SudokuUnlimited"
+        mc:Ignorable="d"
+        Title="Game" WindowStyle="None" ResizeMode="NoResize" WindowState="Maximized">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                 From="0" To="1" Duration="0:0:0.3"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#175676" Offset="0.0"/>
+            <GradientStop Color="#4BA3C3" Offset="0.5"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Grid + Overlay wrapper -->
+        <Grid Grid.Row="0"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Top"
+              Margin="0,50,0,0">
+
+            <!-- Sudoku Grid -->
+            <local:SudokuGrid
+                x:Name="MySudokuGrid"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                CellWidth="80"
+                CellHeight="80"
+                CellBackground="White"
+                TextColor="Black"
+                OuterBorderThickness="3"
+                OuterBorderColor="Black"
+                BoxBorderThickness="2"
+                BoxBorderColor="Black"
+                InnerBorderThickness="0.5"
+                InnerBorderColor="Gray"
+                SolvedFontSize="40"
+                CandidateFontSize="20"
+                MatchHighlightColor="#FFDC64"
+                MatchCandidateHighlightColor="#C8ECEC"
+                MatchContextHighlightColor="#FFFDE0"
+                VisibilityHighlightColor="#E0F6FA"
+                VisibilitySelectedColor="#64C8DC"
+                ErrorColor="#FF5050"
+                KeepUndoHistory="True"
+                ShowUndoControls="True"
+                CellClicked="MySudokuGrid_CellClicked"/>
+
+            <!-- Solved Overlay — sits on top of grid only -->
+            <Border x:Name="SolvedOverlay"
+                    Visibility="Collapsed"
+                    Background="#CC000000"
+                    CornerRadius="8">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="20">
+                    <TextBlock Text="✓"
+                               FontSize="80"
+                               Foreground="#4CAF50"
+                               HorizontalAlignment="Center"
+                               FontWeight="Bold"/>
+                    <TextBlock Text="Solved!"
+                               FontSize="48"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               FontWeight="Bold"
+                               Margin="0,10,0,0"/>
+                    <Button x:Name="SolvedBackButton"
+                Click="SolvedBackButton_Click"
+                HorizontalAlignment="Center"
+                Margin="0,20,0,0"
+                Width="160"
+                Height="40"
+                Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd"
+                            Background="Transparent"
+                            BorderBrush="White"
+                            BorderThickness="2"
+                            CornerRadius="6">
+                                    <TextBlock x:Name="Lbl"
+                                   Text="Back to Puzzles"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="White"/>
+                                        <Setter TargetName="Lbl" Property="Foreground" Value="#175676"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="#4BA3C3"/>
+                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#4BA3C3"/>
+                                        <Setter TargetName="Lbl" Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+        <!-- Number Button Row -->
+        <StackPanel x:Name="NumberPanel"
+                    Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,20,0,30">
+            <StackPanel.Resources>
+                <Style x:Key="NumBtn" TargetType="Button">
+                    <Setter Property="Width" Value="75"/>
+                    <Setter Property="Height" Value="75"/>
+                    <Setter Property="Margin" Value="6,0"/>
+                    <Setter Property="FontSize" Value="42"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Foreground" Value="#4BA3C3"/>
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="BorderBrush" Value="#4BA3C3"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <Ellipse Fill="{TemplateBinding Background}"
+                                             Stroke="{TemplateBinding BorderBrush}"
+                                             StrokeThickness="2"/>
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="White"/>
+                                        <Setter Property="Foreground" Value="#4BA3C3"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="White"/>
+                                        <Setter Property="Foreground" Value="#4BA3C3"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" Value="#E0E0E0"/>
+                                        <Setter Property="Foreground" Value="#A0A0A0"/>
+                                        <Setter Property="BorderBrush" Value="#C0C0C0"/>
+                                        <Setter Property="Opacity" Value="0.5"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </StackPanel.Resources>
+
+            <Button Content="1" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="1"/>
+            <Button Content="2" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="2"/>
+            <Button Content="3" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="3"/>
+            <Button Content="4" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="4"/>
+            <Button Content="5" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="5"/>
+            <Button Content="6" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="6"/>
+            <Button Content="7" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="7"/>
+            <Button Content="8" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="8"/>
+            <Button Content="9" Style="{StaticResource NumBtn}" Click="NumberButton_Click" MouseRightButtonUp="NumberButton_RightClick" Tag="9"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

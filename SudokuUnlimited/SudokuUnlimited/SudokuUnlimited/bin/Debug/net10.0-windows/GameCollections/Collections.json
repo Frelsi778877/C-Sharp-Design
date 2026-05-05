@@ -1,0 +1,54 @@
+{
+  "collections": [
+    {
+      "id": "c001",
+      "name": "Huge Dump",
+      "filename": "17_Sudoku.txt",
+      "difficulty": "Unknown",
+      "solved": []
+    },
+    {
+      "id": "c002",
+      "name": "Huge Dump Part 2",
+      "filename": "17puz49157.txt",
+      "difficulty": "Unknown",
+      "solved": [
+        1,
+        3,
+        7
+      ]
+    },
+    {
+      "id": "c003",
+      "name": "Easy Puzzles",
+      "filename": "Sudoku_easy.txt",
+      "difficulty": "Easy",
+      "solved": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "c004",
+      "name": "Medium Puzzles",
+      "filename": "Sudoku_medium.txt",
+      "difficulty": "Medium",
+      "solved": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "c005",
+      "name": "Hard Puzzles",
+      "filename": "Sudoku_hard.txt",
+      "difficulty": "Hard",
+      "solved": [
+        1,
+        2
+      ]
+    }
+  ]
+}
